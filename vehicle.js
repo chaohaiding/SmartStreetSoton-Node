@@ -9,7 +9,7 @@ var models_path = __dirname + '/app/models'
 fs.readdirSync(models_path).forEach(function (file) {
   if (~file.indexOf('.js')) require(models_path + '/' + file)
 });
-var Accident=mongoose.model('Accident');
+var Vehicle=mongoose.model('Vehicle');
 mongoose.connect(config.db);
 var db=mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -19,55 +19,41 @@ db.once('open', function callback () {
 });
 
 function parsingcsv(){
+var i=0;
 csv()
-.from.path(__dirname+'/data/Accidents0512.csv', { delimiter: ',', escape: '"' })
-.to.stream(fs.createWriteStream(__dirname+'/Accident.txt'))
+.from.path(__dirname+'/data/Vehicles0512.csv', { delimiter: ',', escape: '"' })
+.to.stream(fs.createWriteStream(__dirname+'/Vehicle.txt'))
 .on('record', function(row,index){
   if(index!=0)
- {  
-  //console.log('#'+index+' '+row[1]);
-  new Accident({
-    "Accident_Index": row[0],
-	"Location_Easting_OSGR": row[1],
-	"Location_Northing_OSGR": row[2],
-	"Longitude": row[3],
-	"Latitude": row[4],
-	"Police_Force": row[5],
-	"Accident_Severity":row[6],
-    "Number_of_Vehicles":row[7],
-	"Number_of_Casualties":row[8],
-	"Date": row[9],
-	"Day_of_Week":row[10],
-	"Time": row[11],	
-    "Local_Authority_District": row[12],
-	"Local_Authority_Highway": row[13],
-	"1st_Road_Class":	row[14],
-    "1st_Road_Number": row[15],
-	"Road_Type": row[16],
-	"Speed_limit": row[17],
-	"Junction_Detail":row[18],
-	"Junction_Control":row[19],
-	"2nd_Road_Class":row[20],
-	"2nd_Road_Number":row[21],	
-    "Pedestrian_CrossingHuman_Control":row[22],
-	"Pedestrian_Crossing-Physical_Facilities":row[23],
-	"Light_Conditions":row[24],
-    "Weather_Conditions":row[25],
-	"Road_Surface_Conditions":row[26],	
-    "Special_Conditions_at_Site":row[27],
-	"Carriageway_Hazards":row[28],
-	"Urban_or_Rural_Area":row[29],
-	"Did_Police_Officer_Attend_Scene_of_Accident":row[30],
-	"LSOA_of_Accident_Location": row[31]
-    }).save(function(err,accidentnew)
+ { 
+  if(row[2]==1){
+  new Vehcile({
+    "Acc_Index": row[0],
+	"Vehicle_Reference": row[1],
+	"Vehicle_Type":row[2],
+	"Towing_and_Articulation":row[3],
+	"Vehicle_Manoeuvre":row[4],
+    "Vehicle_Location-Restricted_Lane":row[5],
+    "Junction_Location":row[6],
+	"Skidding_and_Overturning":row[7],
+	"Hit_Object_in_Carriageway":row[8],
+	"Vehicle_Leaving_Carriageway":row[9],
+	"Hit_Object_off_Carriageway":row[10],
+	"1st_Point_of_Impact":row[11],
+	"Was_Vehicle_Left_Hand_Drive":row[12],
+	"Journey_Purpose_of_Driver":row[13],
+	"Sex_of_Driver":row[14]
+    }).save(function(err,vehiclenew)
 	{
 	    if(err) { console.log(err); return handleError(err);}
-        console.log(accidentnew.Accident_Index);
+        console.log(vehcilenew.Acc_Index);
+        i++;
     });
-}
+    }
+   }
 })
-.on('close', function(count){
-  console.log('Number of lines: '+count);
+.on('close', function(i){
+  console.log('Number of lines: '+i);
 })
 .on('error', function(error){
   console.log(error.message);

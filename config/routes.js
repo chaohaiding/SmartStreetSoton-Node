@@ -1,20 +1,18 @@
-var edge = require('edge');
+/*var edge = require('edge');
 
-
-/*
 var retrieve = edge.func('py','./python/retrieve.py');
 
 hello(54.7833333333,-127.177222222, function (error, result) {
     if (error) throw error;
     console.log(result);
-});*/
-
-/*var hello = edge.func('py', 'hello.py');
+});
+var hello = edge.func('py', 'hello.py');
 
 hello('Node.js', function (error, result) {
     if (error) throw error;
     console.log(result);
 });*/
+
 module.exports = function (app) {
   // user routes
   var users = require('../app/controllers/users')
