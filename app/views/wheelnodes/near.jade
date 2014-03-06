@@ -1,0 +1,110 @@
+extends ../layouts/default
+block scripts
+  script(src='/script/marker.js')
+  script(src='/js/leaflet.awesome-markers.js')
+  script(src='/js/leaflet.markercluster-src.js')
+block main
+  script.
+   $("document").ready(function(){
+    var greenMarker = L.AwesomeMarkers.icon({
+     prefix:'fa',
+     markerColor: 'green',
+     iconColor: 'white',
+     spin: false
+     });
+     var blueMarker = L.AwesomeMarkers.icon({
+     prefix:'fa',
+     markerColor: 'blue',
+     iconColor: 'white',
+     spin: false
+     });
+    var zoomview=13;
+    if(#{range}<=100) zoomview=18;
+    if(#{range}>100&& #{range}< 500) zoomview=16;
+    if(#{range}>499&& #{range}<1000) zoomview=15;
+    if(#{range}>999) zoomview=14; 
+    var map = L.map('map').setView([#{lat}, #{lon}], zoomview);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { maxZoom:19, attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    L.marker([#{lat},#{lon}],{icon:greenMarker}).bindPopup("Current Location: <a href=/data/nodes/#{Id}>#{name||"null"}</a>").openPopup();
+    var markers=new L.markerClusterGroup();
+    var mynodes=!{nodes};
+    for(var i in mynodes)
+    {
+       var node=mynodes[i];
+       var marker=L.marker([node.lat, node.lon],{icon:blueMarker}).bindPopup('Name: <a href=/data/nodes/'+node.id+'>'+node.name+'</a>.<br /> Type:'+ node.type.wheelmap_identifier+'.<br /> Accessibility:'+node.accessibility);
+       markers.addLayer(marker);
+    }
+    map.addLayer(markers);
+    var circle = L.circle([#{lat},#{lon}], #{range}, {
+    color: 'blue',
+    fillColor: '#0000ff',
+    fillOpacity: 0.2}).addTo(map);
+    });
+    
+  ul.breadcrumb
+   li
+     a(href="/home") Home
+     span.divider /
+   li
+     a(href="/data/nodes") Location Data
+     span.divider /
+   li
+     a(href='/data/nodes/'+Id) id_#{NodeId}
+     span.divider /
+   li.active Nearby
+block content
+ if(count==0)
+  .alert.alert-warn
+      button.close(type='button', data-dismiss='alert') &times;
+      | There are no specified nearby 
+      | location data in current database within #{range} meters. 
+ else
+  .alert.alert-info
+      button.close(type='button', data-dismiss='alert') &times;
+      |#{count} Nearby Location Data within #{range} meters.
+  .row-fluid  
+    .span12
+      .map#map(style="height: 450px")
+  br
+  .row-fluid
+    .span12     
+       table.table-striped.table-bordered.table-hover
+          thead
+            tr
+              th.span1 Node_Id
+              th.span2 Name
+              th.span2 Address
+              th.span1 City
+              th.span2 County
+              th.span2 Country
+              th.span1 Type
+              th.span1 Wheelchair Access
+          tbody
+             each wheelnode in wheelnodes
+              .wheelnode
+                tr
+                 td #{wheelnode.id_list.id}
+                 td 
+                   if(wheelnode.name==null)
+                    a(href='/data/nodes/'+wheelnode._id) Unknown
+                   else
+                    a(href='/data/nodes/'+wheelnode._id) #{wheelnode.name}
+                 td  #{wheelnode.housename} #{wheelnode.street}
+                 if(wheelnode.city==null||"")
+                   td   Unknown
+                 else
+                   td #{wheelnode.city}
+                 td  #{wheelnode.county} 
+                   
+                 td  #{wheelnode.country_name} 
+                 td  #{wheelnode.type.wheelmap_identifier} 
+                 td  
+                   if(wheelnode.Accessibility.wheelchair=="unknown")
+                     span.label.label #{wheelnode.Accessibility.wheelchair}
+                   if(wheelnode.Accessibility.wheelchair=="no")
+                     span.label.label-important #{wheelnode.Accessibility.wheelchair}
+                   if(wheelnode.Accessibility.wheelchair=="limited")
+                     span.label.label-warning #{wheelnode.Accessibility.wheelchair}
+                   if(wheelnode.Accessibility.wheelchair=="yes")
+                     span.label.label-success #{wheelnode.Accessibility.wheelchair}
+    

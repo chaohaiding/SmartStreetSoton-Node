@@ -1,0 +1,51 @@
+extends ../layouts/default
+
+block content
+  - var action = '/datasets'
+  if (!dataset.isNew)
+    - action += '/'+dataset.id
+
+  if (typeof errors !== 'undefined')
+    .fade.in.alert.alert-block.alert-error
+      a.close(data-dismiss="alert", href="javascript:void(0)") x
+      ul
+        each error in errors
+          li= error.type
+
+  .row
+    .span7
+      form.form-horizontal(method="post", action=action, enctype="multipart/form-data")
+        if (!dataset.isNew)
+          input(type="hidden", name="_method", value="PUT")
+          
+        .control-group
+          label.control-label(for='title') Title
+          .controls
+            input#title.input-xlarge(type='text', name="title", value=dataset.title, placeholder='Enter the title')
+
+        .control-group
+          label.control-label(for='fileupload') File
+          .controls
+           .fileupload.fileupload-new(data-provides='fileupload')
+            .input-append(name='file',value=dataset.file.name)
+             .uneditable-input.span3
+               i.icon-file.fileupload-exists
+               span.fileupload-preview
+             span.btn.btn-file
+              span.fileupload-new Select file
+              span.fileupload-exists Change
+              input(type='file',name='uploadfile', value=dataset.file.name)
+             a.btn.fileupload-exists(href='#', data-dismiss='fileupload',value=dataset.file.name) Remove
+        .control-group
+          label.control-label(for='desc') Description
+          .controls
+            textarea#desc.input-xlarge(type='text', rows='5', name='description', placeholder='Enter the dataset description')=dataset.description
+        .control-group
+          label.control-label(for='tags') Tags
+          .controls
+            label Please use comma to split
+            input#tags.input-xlarge(type='text', name="tags", value=dataset.tags, placeholder='Enter other tags')=dataset.tags
+        .form-actions
+          button.btn.btn-primary(type='submit') Save Changes
+          &nbsp;
+          a.btn(href='/datasets', title="cancel") Cancel

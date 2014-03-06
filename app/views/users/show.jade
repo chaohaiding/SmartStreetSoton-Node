@@ -1,0 +1,10 @@
+extends ../layouts/default
+block main
+  h3= user.name
+  if(user.provider=="google")
+   img(src=user.google.picture, width="160",length"160")
+  else
+  p Email: #{user.email}
+
+  
+

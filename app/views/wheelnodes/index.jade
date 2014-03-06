@@ -1,0 +1,63 @@
+extends ../layouts/default
+
+block main
+  h3(align='center') Open Location Accessibility Information 
+block content
+ script.
+      $("document").ready(function(){
+        var options={
+           currentPage:#{page},
+           totalPages:#{pages},
+           alignment: 'center',
+           numberOfPages: 10,
+           pageUrl: function(type, page, current){
+            return "/data/nodes/page/"+page ;
+          }        
+        }
+        $('#myPagination').bootstrapPaginator(options);
+        $('#myPaginator').bootstrapPaginator("show", page);
+      });
+       
+  .row-fluid
+      .span12
+        table.table-striped.table-bordered.table-hover
+          thead
+            tr
+              th.span1 Node_Id
+              th.span2 Name
+              th.span2 Address
+              th.span1 City
+              th.span2 County
+              th.span2 Country
+              th.span1 Type
+              th.span1 Wheelchair Access
+          tbody
+             each wheelnode in wheelnodes
+              .wheelnode
+                tr
+                 td #{wheelnode.id_list.id}
+                 td 
+                   if(wheelnode.name==null)
+                    a(href='/data/nodes/'+wheelnode._id) Unknown
+                   else
+                    a(href='/data/nodes/'+wheelnode._id) #{wheelnode.name}
+                 td  #{wheelnode.housename} #{wheelnode.street}
+                 if(wheelnode.city==null||"")
+                   td   Unknown
+                 else
+                   td #{wheelnode.city}
+                 td  #{wheelnode.county} 
+                   
+                 td  #{wheelnode.country_name} 
+                 td  #{wheelnode.type.wheelmap_identifier} 
+                 td  
+                   if(wheelnode.Accessibility.wheelchair=="unknown")
+                     span.label.label #{wheelnode.Accessibility.wheelchair}
+                   if(wheelnode.Accessibility.wheelchair=="no")
+                     span.label.label-important #{wheelnode.Accessibility.wheelchair}
+                   if(wheelnode.Accessibility.wheelchair=="limited")
+                     span.label.label-warning #{wheelnode.Accessibility.wheelchair}
+                   if(wheelnode.Accessibility.wheelchair=="yes")
+                     span.label.label-success #{wheelnode.Accessibility.wheelchair}
+        .pagination#myPagination
+        .pagination#myPaginator

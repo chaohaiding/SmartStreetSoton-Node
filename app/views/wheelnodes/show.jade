@@ -1,0 +1,252 @@
+extends ../layouts/default
+
+block main
+  ul.breadcrumb
+    li
+     a(href="/home") Home
+     span.divider /
+    li
+     a(href="/data/nodes") Location Data
+     span.divider /
+    li.active id_#{wheelnode.id_list.id}
+block content
+  script.
+    $("document").ready(function(){
+       $('select').selectpicker({width:'auto'});
+       //leftlet map
+       var map = L.map('map').setView([#{wheelnode.lat}, #{wheelnode.lon}], 17);
+       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+       L.marker([#{wheelnode.lat},#{wheelnode.lon}]).addTo(map)
+       .bindPopup('Location Information');
+       $.fn.editable.defaults.mode = 'inline';
+       $('#table .editable').editable({disabled:true});
+       $('#name').editable({disabled:true});
+       $('#housenumber').editable({disabled:true});
+       $('#street').editable({disabled:true});
+       $('#city').editable({disabled:true});
+       $('#county').editable({disabled:true});
+       $('#state_district').editable({disabled:true});
+       $('#state').editable({disabled:true});
+       $('#country').editable({disabled:true});
+       $('#postcode').editable({disabled:true});
+       //get the category list for editable
+       var category=!{category_list_js};
+       var category_source=[];
+       var type=!{type_list_js};
+       var type_source={
+       1:[],
+       2:[],
+       3:[],
+       4:[],
+       5:[],
+       6:[],
+       7:[],
+       8:[],
+       9:[],
+       10:[],
+       11:[],
+       12:[]
+        };
+       for(var i in category){
+         var obj=category[i];
+         category_source.push({
+         "value": obj.id,
+         "text": obj.identifier
+         });
+         for(var j in type){
+         var obj_t=type[j];
+         if(obj_t.category_id==i){
+         type_source[i].push({
+         "value": obj_t.id,
+         "text": obj_t.identifier
+          });
+          }
+         }
+        }
+       $('#category').editable({
+       disabled:true,
+       source:category_source,
+       success:function(response,newValue){
+          $('#type').editable('option','source',type_source[newValue]);
+          $('#type').editable('setValue', null);
+       }
+       });
+       $('#type').editable({
+       disabled:true,
+       sourceError: 'Please, select value in category' 
+       });
+       $('#phone').editable({disabled:true});
+       $('#website').editable({disabled:true});
+       $('#access_descript').editable({disabled:true});
+       
+       //edit button click event
+       $('#editBtn').click(function(){
+        var editbtn=$('#editBtn');
+        if(editbtn.text()=='Enable Edit') editbtn.text('Disable Edit');
+        else editbtn.text('Enable Edit');
+        $('#table .editable').editable('toggleDisabled');
+       });  
+      
+       // $('#type').editable('getValue').type;
+       
+       //find button
+       $('#findBtn').click(function(){
+       var range=$('.selectpicker1').val();
+       var category=$('.selectpicker2').val();
+       var type=$('.selectpicker3').val();
+       var redirect_url="/data/nodes/!{wheelnode._id}/nearby?range="+range+"&category="+category+"&type="+type;
+       window.location.href=redirect_url;
+       });
+       //mobile usage
+       if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) 
+       {
+         $('select').selectpicker('mobile');
+        }
+        
+       //chained with selectpicker
+       $('.selectpicker3').chained('.selectpicker2');
+       //category change event listener
+       $('.selectpicker2').on('change',function(){
+         $('.selectpicker3').selectpicker('refresh');
+       });
+     });
+     
+     
+   if (!req.isAuthenticated())
+    .alert.alert-warn
+      button.close(type='button', data-dismiss='alert') &times;
+      | If you want to help us to edit this information, please 
+      a(href='/login') 
+       Strong Log in
+      |.
+  .row-fluid
+   .span12
+     |Find Nearby Places
+     &nbsp;
+     |Within:   
+     select.selectpicker1.show-tick
+       option(value='100') 100 meters
+       option(value='300') 300 meters
+       option(value='500') 500 meters
+       option(value='1000') 1000 meters
+     &nbsp;
+     | Category:   
+     select.selectpicker2.show-tick(id='#selectpicker2',data-live-search='true')
+      option(value='0') all
+      each category in category_list
+       option(value=category.id) #{category.localized_name} 
+     &nbsp;
+     | Type:   
+     select.selectpicker3.show-tick(id='#selectpicker3',data-live-search='true')
+      option(class='1 2 3 4 5 6 7 8 9 10 11 12 0', value='0') all
+      each type in type_list
+       option(class=type.category_id+' 0', value=type.id) #{type.localized_name}
+     button#findBtn.btn.btn-primary.pull-right Find
+  br
+  .row-fluid
+   .span4
+     table#table.table-striped.table-bordered.table-hover
+      thead
+        tr
+          th.span3 Item
+          th.span6 Content
+      tbody
+        tr
+         td ID
+         td #{wheelnode.id_list.id}
+        tr
+         td ID Type
+         td #{wheelnode.id_list.type}
+        tr
+          td Name
+          td
+           a#name(href='#', data-type='text', data-placement='right', data-title='Enter name') #{wheelnode.name}
+        tr
+          td House Number
+          td
+           a#housenumber(href='#', data-type='text', data-placement='right', data-title='Enter Housenumber') #{wheelnode.housenumber}
+        tr
+          td Street
+          td 
+           a#street(href='#', data-type='text', data-placement='right', data-title='Enter street') #{wheelnode.street}
+        tr
+         td City
+         td 
+          a#city(href='#', data-type='text', data-placement='right', data-title='Enter city') #{wheelnode.city}
+        tr
+         td County
+         td 
+          a#county(href='#', data-type='text', data-placement='right', data-title='Enter county') #{wheelnode.county}
+        tr
+         td State District
+         td 
+          a#state_district(href='#', data-type='text', data-placement='right', data-title='Enter State District') #{wheelnode.state_district}
+        tr
+         td State
+         td 
+          a#state(href='#', data-type='text', data-placement='right', data-title='Enter State') #{wheelnode.state}
+        tr
+         td Country
+         td 
+          a#country(href='#', data-type='text', data-placement='right', data-title='Enter Country') #{wheelnode.country_name}
+        tr
+         td PostCode
+         td 
+          a#postcode(href='#', data-type='text', data-placement='right', data-title='Enter Postcode') #{wheelnode.postcode}
+        tr
+         td Latitude
+         td #{wheelnode.lat}
+        tr
+         td Longitude
+         td #{wheelnode.lon}
+        tr
+         td Category
+         td
+          a#category(href='#', data-type='select', data-placement='right', data-title='Enter Categor',data-value=wheelnode.category.wheelmap_id) #{wheelnode.category.wheelmap_identifier}
+        tr
+         td Type
+         td
+          a#type(href='#', data-type='select', data-placement='right', data-title='Enter Categor',data-value=wheelnode.type.wheelmap_id) #{wheelnode.type.wheelmap_identifier}         
+        tr
+         td Phone
+         td 
+          a#phone(href='#', data-type='text', data-placement='right', data-title='Enter Phone') #{wheelnode.phone}  
+        tr
+         td Website
+         td 
+          a#website(href='#', data-type='text', data-placement='right', data-title='Enter Website') #{wheelnode.website} 
+        tr
+         td Wheelchair Accessibility
+         td
+           if(wheelnode.Accessibility.wheelchair=="unknown")
+            span.label.label #{wheelnode.Accessibility.wheelchair}
+           if(wheelnode.Accessibility.wheelchair=="no")
+            span.label.label-important #{wheelnode.Accessibility.wheelchair}
+           if(wheelnode.Accessibility.wheelchair=="limited")
+            span.label.label-warning #{wheelnode.Accessibility.wheelchair}
+           if(wheelnode.Accessibility.wheelchair=="yes")
+            span.label.label-success #{wheelnode.Accessibility.wheelchair}
+        tr
+         td Accessibility Description
+         td
+          a#access_descript(href='#', data-type='textarea', data-placement='right', data-title='Enter Accessibility Description') #{wheelnode.Accessibility.wheelchair_description} 
+        tr
+         td Data Provider
+         if(wheelnode.data_provider) 
+          td
+           a(href='http://'+wheelnode.data_provider) #{wheelnode.data_provider}
+         else 
+          td Unknown  
+     br
+     form.center.form-inline.confirm(action="/data/nodes/"+wheelnode._id, method="post")
+     if (req.isAuthenticated()) 
+       button#editBtn.btn.btn-defult Enable Edit
+       button#saveBtn.btn.btn-primary.pull-right(href='/data/nodes/'+wheelnode._id+'/edit', title="save") Save
+
+   .span8
+      .map#map(style="height: 500px")
+    
+
+   
+
+
