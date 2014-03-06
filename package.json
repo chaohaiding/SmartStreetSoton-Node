@@ -17,5 +17,6 @@
     , "forever": "latest"
     , "xmldom":"latest"
     , "d3":"latest"
+    ,"csv":"latest"
   }
 }
