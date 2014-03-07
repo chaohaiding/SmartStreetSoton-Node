@@ -47,7 +47,7 @@ exports.index = function(req, res){
    Vehicle.count().exec(function (err, count) {
       res.render('map', {
         Vehicles: JSON.stringify(Vehicles),
-        pageName:'Map'
+        pageName:'Demon'
       });
     });
   });

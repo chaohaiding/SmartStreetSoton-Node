@@ -24,8 +24,9 @@ app.get('/home',function(req, res){
 
 var vehicles=require('../app/controllers/vehicles')
 app.get('/accidentmap',vehicles.index);
-app.get('/sensormap',vehicles.index);
-app.get('/sensormap',vehicles.index);
+app.get('/cyclespot',function(req, res){
+  res.render('safemap', { title: 'SafeMap-SmartStreet',pageName:'Demon' });
+});
 app.get('/contact', function(req, res){
   res.render('contact', { title: 'Contact-SmartStreet',pageName:'Contact' });
 });

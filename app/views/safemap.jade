@@ -1,0 +1,63 @@
+extends ./layouts/default
+block scripts
+  script(src='/script/marker.js')
+  script(src='/js/leaflet.awesome-markers.js')
+  script(src='/js/leaflet.markercluster-src.js')
+  script(src='/js/leaflet.usermarker.js')
+block content 
+   script.
+    $("document").ready(function(){
+       //leftlet map
+           var center=[55,-2];
+          var zoomview=6;
+          var map = L.map('map').setView(center, zoomview); 
+          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom:19,attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+        //   L.tileLayer('http://{s}.tile.cloudmade.com/70146506bc514228adc1756788c730d3/997/256/{z}/{x}/{y}.png', {
+         //   maxZoom: 18, attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>'}).addTo(map);   
+      
+           var marker = null;
+            $("#findBtn").click(function() {  
+            
+                map.on("locationfound", function(location) {
+                    if (!marker)
+                       marker = L.userMarker(location.latlng, {pulsing:true}).addTo(map);
+                    marker.setLatLng(location.latlng);               
+                    marker.setAccuracy(location.accuracy);
+                });
+                map.locate({
+                    watch: false,
+                    locate: true,
+                    setView: true,
+                    enableHighAccuracy: true
+                });
+            });
+      });
+   .container(align='center')
+    .button#findBtn.btn.btn-success Find My Location
+    &nbsp
+    .button#addBtn.btn.btn-primary(href='#addModal',data-toggle='modal') Report Accident
+   br
+   .container
+    .row
+     .col-md-7
+      .map#map(style="height: 500px")
+     
+       #addModal.modal.fade(tabindex='-1',role='dialog',aria-labelledby='addModalLabel', aira-hidden='true')
+        .modal-dialog
+         .modal-content
+          .modal-header
+            btn.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+            h3#privacyModalLabel Report An Accident
+          .modal-body
+            form(action='', method='post')    
+             .input-group
+              span.input-group-addon Accident Severity
+             input.form-control(type='text', placeholder='1(fatal),2(serious), 3(slight)')
+            
+          .modal-footer 
+            button.btn.btn-default(data-dismiss='modal', aria-hidden='true') Cancel
+            button.btn.btn-primary(type='submit') Report
+     .col-md-5
+            
+   
+   

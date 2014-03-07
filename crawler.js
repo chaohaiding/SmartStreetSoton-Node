@@ -23,7 +23,7 @@ var req = http.request(options_sensor, function(res) {
     var chunkjson=JSON.parse(chunk);
     
     for(var i=0;i<chunkjson.length;i++)
-    {
+    {x c
       var obj=chunkjson[i];
       console.log(obj);
     }

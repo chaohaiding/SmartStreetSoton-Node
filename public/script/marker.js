@@ -47,21 +47,7 @@ function markerrender(center,zoomview,myVehicle){
        markers.addLayer(marker);
     }
      map.addLayer(markers);
-     var marker = null;
-            $("#findBtn").click(function() {
-                map.on("locationfound", function(location) {
-                    if (!marker)
-                       marker = L.userMarker(location.latlng, {pulsing:true}).addTo(map);
-                    marker.setLatLng(location.latlng);
-                    marker.setAccuracy(location.accuracy);
-                });
-                map.locate({
-                    watch: false,
-                    locate: true,
-                    setView: true,
-                    enableHighAccuracy: true
-                });
-            });
+    
 }
 
 
