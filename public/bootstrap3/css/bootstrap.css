@@ -5233,6 +5233,10 @@ a.list-group-item.active > .badge,
   line-height: 2.1428571435;
   color: white;
   background: url(../img/bg-09.jpg) 0 0 #35AE56;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 .jumbotron h1 {
