@@ -27,13 +27,13 @@ csv()
   if(index!=0)
  { 
   if(row[2]==1){
-  new Vehcile({
+  new Vehicle({
     "Acc_Index": row[0],
 	"Vehicle_Reference": row[1],
 	"Vehicle_Type":row[2],
 	"Towing_and_Articulation":row[3],
 	"Vehicle_Manoeuvre":row[4],
-    "Vehicle_Location-Restricted_Lane":row[5],
+    "Vehicle_Location_Restricted_Lane":row[5],
     "Junction_Location":row[6],
 	"Skidding_and_Overturning":row[7],
 	"Hit_Object_in_Carriageway":row[8],
@@ -46,7 +46,7 @@ csv()
     }).save(function(err,vehiclenew)
 	{
 	    if(err) { console.log(err); return handleError(err);}
-        console.log(vehcilenew.Acc_Index);
+        console.log(vehiclenew.Acc_Index);
         i++;
     });
     }

@@ -9,6 +9,8 @@ html
     link(rel='stylesheet', href='/css/font-awesome.css')
     link(rel='stylesheet', href='/css/leaflet.awesome-markers.css')
     link(rel='stylesheet', href='/css/MarkerCluster.Default.css')
+    link(rel='stylesheet', href='/css/leaflet.usermarker.css')
+    
     script(src='/bootstrap3/js/jquery.js')
     script(src='/bootstrap3/js/bootstrap.js')
     script(src='/js/leaflet.js')
@@ -26,11 +28,35 @@ html
           a.navbar-brand(href='/home') CycleSpot 
            col-xs-1.label.label-primary Alpha
           ul.nav.navbar-nav
-              each val,key in {"Home":"home","Map":"map","About":"about","Contact":"contact"}
+              each val,key in {"Home":"home","Demon":"Demon","About":"about","Contact":"contact"}
                 if (key==pageName)
+                  if(key=="Demon")
+                     li.dropdown
+                      a.dropdown-toggle(href='demon#', data-toggle='dropdown')=key
+                        b.caret
+                      ul.dropdown-menu
+                        li
+                          a(href='/accidentmap') Accident Map
+                        li
+                          a(href='/sensormap') Sensor Map
+                        li
+                          a(href='/cyclesafemap') Cycle Safe Map
+                  else
                    li.active
                      a(href='/#{val}')= key
                 else
+                  if(key=="Demon")
+                     li.dropdown
+                      a.dropdown-toggle(href='demon#', data-toggle='dropdown')=key
+                        b.caret
+                      ul.dropdown-menu
+                        li
+                          a(href='/accidentmap') Accident Map
+                        li
+                          a(href='/sensormap') Sensor Map
+                        li
+                          a(href='/cyclesafemap') Cycle Safe Map
+                  else
                     li
                      a(href='/#{val}')= key 
  

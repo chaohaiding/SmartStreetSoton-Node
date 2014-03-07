@@ -14,15 +14,6 @@ hello('Node.js', function (error, result) {
 });*/
 
 module.exports = function (app) {
-  // user routes
-  var users = require('../app/controllers/users')
-  app.get('/login', users.login)
-  app.get('/signup', users.signup)
-  app.get('/logout', users.logout)
-  app.post('/users', users.create)
-  app.get('/users/:userId', users.show)
-  app.param('userId', users.user)
-
 // home route
 app.get('/', function(req, res){
   res.render('index', { title: 'Home-SmartStreet'});
@@ -30,13 +21,11 @@ app.get('/', function(req, res){
 app.get('/home',function(req, res){
   res.render('index', { title: 'Home-SmartStreet', pageName:'Home'});
 });
-app.get('/map',function(req, res){
- 
-  res.render('map', { title: 'Map-SmartStreet', pageName:'Map'});
-  
-  
-});
 
+var vehicles=require('../app/controllers/vehicles')
+app.get('/accidentmap',vehicles.index);
+app.get('/sensormap',vehicles.index);
+app.get('/sensormap',vehicles.index);
 app.get('/contact', function(req, res){
   res.render('contact', { title: 'Contact-SmartStreet',pageName:'Contact' });
 });
