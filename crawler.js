@@ -21,7 +21,6 @@ var options_sensor = {
 var req = http.request(options_sensor, function(res) {
   res.on('data', function (chunk) {
     var chunkjson=JSON.parse(chunk);
-    
     for(var i=0;i<chunkjson.length;i++)
     {
       var obj=chunkjson[i];
