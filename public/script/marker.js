@@ -43,9 +43,7 @@ function markerrender(center,zoomview,myVehicle){
             spin: false
        });
        }
-       
-      
-       var marker=L.marker([vehicle.Latitude, vehicle.Longitude],{icon:Marker}).bindPopup('Date: <a href=/data/vehicles/'+vehicle._id+'>'+vehicle.Date+'</a>. <br /> Time:'+vehicle.Time+'. <br /> Accident Severity:'+vehicle.Accident_Severity);
+       var marker=L.marker([vehicle.Latitude, vehicle.Longitude],{icon:Marker}).bindPopup('Date:'+vehicle.Date+'. <br /> Time:'+vehicle.Time+'. <br /> Accident Severity:'+vehicle.Accident_Severity);
        markers.addLayer(marker);
     }
      map.addLayer(markers);
@@ -54,7 +52,6 @@ function markerrender(center,zoomview,myVehicle){
                 map.on("locationfound", function(location) {
                     if (!marker)
                        marker = L.userMarker(location.latlng, {pulsing:true}).addTo(map);
-                    
                     marker.setLatLng(location.latlng);
                     marker.setAccuracy(location.accuracy);
                 });
