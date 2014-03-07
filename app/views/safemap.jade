@@ -14,16 +14,15 @@ block content
           L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {maxZoom:19,attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
         //   L.tileLayer('http://{s}.tile.cloudmade.com/70146506bc514228adc1756788c730d3/997/256/{z}/{x}/{y}.png', {
          //   maxZoom: 18, attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>'}).addTo(map);   
-      
            var marker = null;
             $("#findBtn").click(function() {  
-            
                 map.on("locationfound", function(location) {
                     if (!marker)
                        marker = L.userMarker(location.latlng, {pulsing:true}).addTo(map);
                     marker.setLatLng(location.latlng);               
-                    marker.setAccuracy(location.accuracy);
+                    marker.setAccuracy(location.accuracy);   
                 });
+                
                 map.locate({
                     watch: false,
                     locate: true,
