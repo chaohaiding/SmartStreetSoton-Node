@@ -310,7 +310,7 @@ body {
   font-size: 14px;
   line-height: 1.428571429;
   color: #333333;
-  background-color: #ffffff;
+  background-color: #EFF3F3;
 }
 
 input,
@@ -5237,6 +5237,7 @@ a.list-group-item.active > .badge,
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  height: 500px;
 }
 
 .jumbotron h1 {
