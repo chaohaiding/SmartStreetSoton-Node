@@ -63,6 +63,7 @@ VehicleSchema.statics = {
     if(option=="listbyDate"){
     var criteria = options.criteria || {}
     this.find(criteria)
+      .limit(3000)
       .sort({'Date':-1})
       .exec(cb)
     }
